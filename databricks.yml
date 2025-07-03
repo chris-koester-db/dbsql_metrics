@@ -11,7 +11,9 @@ include:
 # Variable declarations. These variables are assigned in the dev/prod targets below.
 variables:
   warehouse_id:
-    description: The warehouse to use
+    description: Lookup ID of an existing warehouse
+    lookup:
+      warehouse: "Shared Serverless"
   catalog:
     description: The catalog to use
   schema:
@@ -28,7 +30,6 @@ targets:
     workspace:
       host: https://e2-demo-field-eng.cloud.databricks.com
     variables:
-      warehouse_id: 4b9b953939869799
       catalog: users
       schema: ${workspace.current_user.short_name}
 
