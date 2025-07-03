@@ -6,13 +6,13 @@
       "queryLines": [
         "select\n",
         "  date,\n",
+        "  coalesce(client_application, 'All clients') as client_application,\n",
         "  measure(query_count) as query_count,\n",
-        "  measure(query_duration_sec_avg) as query_duration_sec_avg,\n",
         "  measure(distinct_users) as distinct_users\n",
         "from\n",
-        "  users.chris_koester.metv_query_history\n",
+        "  users.chris_koester.metv_dbsql\n",
         "where date between :param_date.min and :param_date.max\n",
-        "group by all"
+        "group by grouping sets ((date), (date, client_application))"
       ],
       "parameters": [
         {
@@ -24,7 +24,7 @@
             "range": {
               "dataType": "DATE",
               "min": {
-                "value": "now-90d/d"
+                "value": "now-7d/d"
               },
               "max": {
                 "value": "now/d"
@@ -32,105 +32,6 @@
             }
           }
         }
-      ]
-    },
-    {
-      "name": "5142b18c",
-      "displayName": "param_months",
-      "queryLines": [
-        "select *\n",
-        "from values ('Jan'), ('Feb'), ('Mar'), ('Apr'), ('May'), ('Jun'), ('Jul'), ('Aug'), ('Sep'), ('Oct'), ('Nov'), ('Dec') as data(month)"
-      ]
-    },
-    {
-      "name": "40967098",
-      "displayName": "metv_query_history_monthly",
-      "queryLines": [
-        "select\n",
-        "  year,\n",
-        "  month,\n",
-        "  measure(query_count) as query_count,\n",
-        "  measure(query_duration_sec_avg) as query_duration_sec_avg,\n",
-        "  measure(query_duration_sec_sum) as query_duration_sec_sum\n",
-        "  -- measure(distinct_users_t7d) as distinct_users_t7d\n",
-        "from\n",
-        "  main.chris_koester.metv_query_history\n",
-        "where year = :year\n",
-        "and array_contains(:month, month)\n",
-        "group by all"
-      ],
-      "parameters": [
-        {
-          "displayName": "month",
-          "keyword": "month",
-          "dataType": "STRING",
-          "complexType": "MULTI",
-          "defaultSelection": {
-            "values": {
-              "dataType": "STRING",
-              "values": [
-                {
-                  "value": "Jan"
-                },
-                {
-                  "value": "Feb"
-                },
-                {
-                  "value": "Mar"
-                },
-                {
-                  "value": "Apr"
-                },
-                {
-                  "value": "May"
-                },
-                {
-                  "value": "Jun"
-                },
-                {
-                  "value": "Jul"
-                },
-                {
-                  "value": "Aug"
-                },
-                {
-                  "value": "Sep"
-                },
-                {
-                  "value": "Oct"
-                },
-                {
-                  "value": "Nov"
-                },
-                {
-                  "value": "Dec"
-                }
-              ]
-            }
-          }
-        },
-        {
-          "displayName": "year",
-          "keyword": "year",
-          "dataType": "DECIMAL",
-          "defaultSelection": {
-            "values": {
-              "dataType": "DECIMAL",
-              "values": [
-                {
-                  "value": "2025"
-                }
-              ]
-            }
-          }
-        }
-      ]
-    },
-    {
-      "name": "c985c9d7",
-      "displayName": "param_current_date",
-      "queryLines": [
-        "select current_date() as date"
       ]
     }
   ],
@@ -170,11 +71,11 @@
                       "expression": "`date`"
                     },
                     {
-                      "name": "sum(query_count)",
-                      "expression": "SUM(`query_count`)"
+                      "name": "query_count",
+                      "expression": "`query_count`"
                     }
                   ],
-                  "disaggregated": false
+                  "disaggregated": true
                 }
               }
             ],
@@ -190,12 +91,15 @@
                   "displayName": "date"
                 },
                 "y": {
-                  "fieldName": "sum(query_count)",
+                  "fieldName": "query_count",
                   "scale": {
                     "type": "quantitative"
                   },
-                  "displayName": "Sum of query_count"
+                  "displayName": "Query Count"
                 }
+              },
+              "frame": {
+                "showTitle": false
               }
             }
           },
@@ -211,7 +115,7 @@
             "name": "4f0c1343",
             "queries": [
               {
-                "name": "parameter_dashboards/01f030f992dd101f90a5fdccd0d3cf87/datasets/01f030f992dd16c2a3d67fd83b9391f3_param_date",
+                "name": "parameter_dashboards/01f058247872140182c30b5ac2008695/datasets/01f05824787219928296cb41d164fd6e_param_date",
                 "query": {
                   "datasetName": "temp_dataset_name",
                   "parameters": [
@@ -231,7 +135,7 @@
                 "fields": [
                   {
                     "parameterName": "param_date",
-                    "queryName": "parameter_dashboards/01f030f992dd101f90a5fdccd0d3cf87/datasets/01f030f992dd16c2a3d67fd83b9391f3_param_date"
+                    "queryName": "parameter_dashboards/01f058247872140182c30b5ac2008695/datasets/01f05824787219928296cb41d164fd6e_param_date"
                   }
                 ]
               },
@@ -261,11 +165,16 @@
                       "expression": "`date`"
                     },
                     {
-                      "name": "sum(distinct_users)",
-                      "expression": "SUM(`distinct_users`)"
+                      "name": "distinct_users",
+                      "expression": "`distinct_users`"
                     }
                   ],
-                  "disaggregated": false
+                  "filters": [
+                    {
+                      "expression": "`client_application` IN (`client_application`) OR TRUE"
+                    }
+                  ],
+                  "disaggregated": true
                 }
               }
             ],
@@ -281,11 +190,11 @@
                   "displayName": "date"
                 },
                 "y": {
-                  "fieldName": "sum(distinct_users)",
+                  "fieldName": "distinct_users",
                   "scale": {
                     "type": "quantitative"
                   },
-                  "displayName": "Sum of distinct_users"
+                  "displayName": "Distinct Users"
                 }
               }
             }
@@ -331,7 +240,7 @@
             }
           },
           "position": {
-            "x": 4,
+            "x": 3,
             "y": 0,
             "width": 1,
             "height": 2
@@ -367,6 +276,66 @@
               "frame": {
                 "showTitle": true,
                 "title": "Highest Distinct Users Count"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "50773052",
+            "queries": [
+              {
+                "name": "dashboards/01f058247872140182c30b5ac2008695/datasets/01f05824787219928296cb41d164fd6e_client_application",
+                "query": {
+                  "datasetName": "temp_dataset_name",
+                  "fields": [
+                    {
+                      "name": "client_application",
+                      "expression": "`client_application`"
+                    },
+                    {
+                      "name": "client_application_associativity",
+                      "expression": "COUNT_IF(`associative_filter_predicate_group`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-single-select",
+              "encodings": {
+                "fields": [
+                  {
+                    "fieldName": "client_application",
+                    "displayName": "client_application",
+                    "queryName": "dashboards/01f058247872140182c30b5ac2008695/datasets/01f05824787219928296cb41d164fd6e_client_application"
+                  }
+                ]
+              },
+              "disallowAll": true,
+              "selection": {
+                "defaultSelection": {
+                  "values": {
+                    "dataType": "STRING",
+                    "values": [
+                      {
+                        "value": "All clients"
+                      }
+                    ]
+                  }
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Client Application"
               }
             }
           },
