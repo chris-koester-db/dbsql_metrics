@@ -1,0 +1,389 @@
+{
+  "datasets": [
+    {
+      "name": "temp_dataset_name",
+      "displayName": "metv_query_history_daily",
+      "queryLines": [
+        "select\n",
+        "  date,\n",
+        "  measure(query_count) as query_count,\n",
+        "  measure(query_duration_sec_avg) as query_duration_sec_avg,\n",
+        "  measure(distinct_users) as distinct_users\n",
+        "from\n",
+        "  users.chris_koester.metv_query_history\n",
+        "where date between :param_date.min and :param_date.max\n",
+        "group by all"
+      ],
+      "parameters": [
+        {
+          "displayName": "param_date",
+          "keyword": "param_date",
+          "dataType": "DATE",
+          "complexType": "RANGE",
+          "defaultSelection": {
+            "range": {
+              "dataType": "DATE",
+              "min": {
+                "value": "now-90d/d"
+              },
+              "max": {
+                "value": "now/d"
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5142b18c",
+      "displayName": "param_months",
+      "queryLines": [
+        "select *\n",
+        "from values ('Jan'), ('Feb'), ('Mar'), ('Apr'), ('May'), ('Jun'), ('Jul'), ('Aug'), ('Sep'), ('Oct'), ('Nov'), ('Dec') as data(month)"
+      ]
+    },
+    {
+      "name": "40967098",
+      "displayName": "metv_query_history_monthly",
+      "queryLines": [
+        "select\n",
+        "  year,\n",
+        "  month,\n",
+        "  measure(query_count) as query_count,\n",
+        "  measure(query_duration_sec_avg) as query_duration_sec_avg,\n",
+        "  measure(query_duration_sec_sum) as query_duration_sec_sum\n",
+        "  -- measure(distinct_users_t7d) as distinct_users_t7d\n",
+        "from\n",
+        "  main.chris_koester.metv_query_history\n",
+        "where year = :year\n",
+        "and array_contains(:month, month)\n",
+        "group by all"
+      ],
+      "parameters": [
+        {
+          "displayName": "month",
+          "keyword": "month",
+          "dataType": "STRING",
+          "complexType": "MULTI",
+          "defaultSelection": {
+            "values": {
+              "dataType": "STRING",
+              "values": [
+                {
+                  "value": "Jan"
+                },
+                {
+                  "value": "Feb"
+                },
+                {
+                  "value": "Mar"
+                },
+                {
+                  "value": "Apr"
+                },
+                {
+                  "value": "May"
+                },
+                {
+                  "value": "Jun"
+                },
+                {
+                  "value": "Jul"
+                },
+                {
+                  "value": "Aug"
+                },
+                {
+                  "value": "Sep"
+                },
+                {
+                  "value": "Oct"
+                },
+                {
+                  "value": "Nov"
+                },
+                {
+                  "value": "Dec"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "year",
+          "keyword": "year",
+          "dataType": "DECIMAL",
+          "defaultSelection": {
+            "values": {
+              "dataType": "DECIMAL",
+              "values": [
+                {
+                  "value": "2025"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "c985c9d7",
+      "displayName": "param_current_date",
+      "queryLines": [
+        "select current_date() as date"
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "name": "temp_page_name",
+      "displayName": "Query History",
+      "layout": [
+        {
+          "widget": {
+            "name": "temp_text_box_name",
+            "multilineTextboxSpec": {
+              "lines": [
+                "# Query History\n",
+                "    "
+              ]
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 0,
+            "width": 2,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "temp_table_name",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "temp_dataset_name",
+                  "fields": [
+                    {
+                      "name": "date",
+                      "expression": "`date`"
+                    },
+                    {
+                      "name": "sum(query_count)",
+                      "expression": "SUM(`query_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "date",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "date"
+                },
+                "y": {
+                  "fieldName": "sum(query_count)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sum of query_count"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 2,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "4f0c1343",
+            "queries": [
+              {
+                "name": "parameter_dashboards/01f030f992dd101f90a5fdccd0d3cf87/datasets/01f030f992dd16c2a3d67fd83b9391f3_param_date",
+                "query": {
+                  "datasetName": "temp_dataset_name",
+                  "parameters": [
+                    {
+                      "name": "param_date",
+                      "keyword": "param_date"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "filter-date-range-picker",
+              "encodings": {
+                "fields": [
+                  {
+                    "parameterName": "param_date",
+                    "queryName": "parameter_dashboards/01f030f992dd101f90a5fdccd0d3cf87/datasets/01f030f992dd16c2a3d67fd83b9391f3_param_date"
+                  }
+                ]
+              },
+              "frame": {
+                "showTitle": true
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "205079ae",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "temp_dataset_name",
+                  "fields": [
+                    {
+                      "name": "date",
+                      "expression": "`date`"
+                    },
+                    {
+                      "name": "sum(distinct_users)",
+                      "expression": "SUM(`distinct_users`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "bar",
+              "encodings": {
+                "x": {
+                  "fieldName": "date",
+                  "scale": {
+                    "type": "temporal"
+                  },
+                  "displayName": "date"
+                },
+                "y": {
+                  "fieldName": "sum(distinct_users)",
+                  "scale": {
+                    "type": "quantitative"
+                  },
+                  "displayName": "Sum of distinct_users"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 3,
+            "y": 2,
+            "width": 3,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "dd438151",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "temp_dataset_name",
+                  "fields": [
+                    {
+                      "name": "max(query_count)",
+                      "expression": "MAX(`query_count`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "max(query_count)",
+                  "displayName": "Maximum query_count"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Highest Query Count"
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        },
+        {
+          "widget": {
+            "name": "e0964c60",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "temp_dataset_name",
+                  "fields": [
+                    {
+                      "name": "max(distinct_users)",
+                      "expression": "MAX(`distinct_users`)"
+                    }
+                  ],
+                  "disaggregated": false
+                }
+              }
+            ],
+            "spec": {
+              "version": 2,
+              "widgetType": "counter",
+              "encodings": {
+                "value": {
+                  "fieldName": "max(distinct_users)",
+                  "displayName": "Maximum distinct_users"
+                }
+              },
+              "frame": {
+                "showTitle": true,
+                "title": "Highest Distinct Users Count"
+              }
+            }
+          },
+          "position": {
+            "x": 5,
+            "y": 0,
+            "width": 1,
+            "height": 2
+          }
+        }
+      ],
+      "pageType": "PAGE_TYPE_CANVAS"
+    }
+  ],
+  "uiSettings": {
+    "theme": {
+      "widgetHeaderAlignment": "ALIGNMENT_UNSPECIFIED"
+    }
+  }
+}
