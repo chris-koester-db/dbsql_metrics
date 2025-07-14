@@ -1,6 +1,6 @@
 # dbsql_metrics
 
-The 'dbsql_metrics' project demonstrates how to use [**Databricks Asset Bundles**](https://docs.databricks.com/aws/en/dev-tools/bundles/) with [**Unity Catalog Metric Views**](https://docs.databricks.com/aws/en/metric-views/) to create a end-to-end analytics solution on Databricks. This project showcases best practices for organizing, deploying, and managing Databricks SQL resources using the modern Asset Bundle framework.
+The 'dbsql_metrics' project demonstrates how to use [**Databricks Asset Bundles**](https://docs.databricks.com/aws/en/dev-tools/bundles/) with [**Unity Catalog Metric Views**](https://docs.databricks.com/aws/en/metric-views/) to create a end-to-end analytics solution on Databricks. This project showcases best practices for organizing, deploying, and managing Databricks SQL resources using the modern Asset Bundle framework for data warehouse workload.
 
 
 ## Prerequisites
@@ -51,19 +51,19 @@ targets:
       schema: your_schema
 ```
 
-### 5. Generate Dashboard Configuration
-Before deploying the bundle, run the Python script to generate the dashboard configuration with your specific catalog and schema:
+### 5. Update Dashboard Configuration
+Before deploying the bundle, run the Python script to update the dashboard configuration with your specific catalog and schema:
 
 ```bash
 $ cd src
-$ python replace_dashboard_template.py
+$ python replace_dashboard_vars.py
 ```
 
 This script:
 - Reads your `databricks.yml` configuration
-- Takes the template dashboard (`dbsql_metrics_template.lvdash.json`)
-- Replaces `CATALOG_NAME` and `SCHEMA_NAME` placeholders with your actual values
-- Generates the final dashboard file (`dbsql_metrics.lvdash.json`)
+- Updates the existing dashboard file (`dbsql_metrics.lvdash.json`)
+- Replaces the catalog and schema parameter values with your actual values from the databricks.yml file
+- Preserves all other dashboard configuration settings
 
 ## Deployment
 
@@ -106,4 +106,4 @@ For comprehensive documentation on:
 - `src/`: Source files including notebooks and dashboard templates
 - `resources/`: Bundle resource definitions (jobs, dashboards)
 - `databricks.yml`: Main bundle configuration file
-- `src/replace_dashboard_template.py`: Script to customize dashboard templates
+- `src/replace_dashboard_vars.py`: Script to update dashboard configuration with catalog and schema values
