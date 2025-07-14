@@ -31,7 +31,8 @@ targets:
       host: https://e2-demo-field-eng.cloud.databricks.com
     variables:
       catalog: users
-      schema: ${workspace.current_user.short_name}
+      schema: anhhoang_chu
+      # warehouse_id: 4b9b953939869799
 
   prod:
     mode: production

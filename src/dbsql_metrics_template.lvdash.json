@@ -10,7 +10,7 @@
         "  measure(query_count) as query_count,\n",
         "  measure(distinct_users) as distinct_users\n",
         "from\n",
-        "  users.anhhoang_chu.metv_dbsql\n",
+        "  CATALOG_NAME.SCHEMA_NAME.metv_dbsql\n",
         "where date between :param_date.min and :param_date.max\n",
         "group by grouping sets ((date), (date, client_application))"
       ],

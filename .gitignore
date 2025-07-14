@@ -1,2 +1,4 @@
 .databricks/
 .DS_Store
+.vscode/**
+typings/**

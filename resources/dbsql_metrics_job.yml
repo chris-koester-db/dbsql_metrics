@@ -13,9 +13,9 @@ resources:
           interval: 1
           unit: DAYS
 
-      email_notifications:
-        on_failure:
-          - chris.koester@databricks.com
+      # email_notifications:
+      #   on_failure:
+      #     - chris.koester@databricks.com
 
       parameters:
         - name: catalog
@@ -32,6 +32,8 @@ resources:
             source: WORKSPACE
             warehouse_id: ${var.warehouse_id}
         - task_key: fct_query_history
+          depends_on:
+            - task_key: dim_calendar
           notebook_task:
             notebook_path: ../src/fct_query_history.ipynb
             source: WORKSPACE
@@ -39,7 +41,6 @@ resources:
         - task_key: metv_dbsql
           depends_on:
             - task_key: fct_query_history
-            - task_key: dim_calendar
           notebook_task:
             notebook_path: ../src/metv_dbsql.ipynb
             source: WORKSPACE
