@@ -53,11 +53,11 @@ targets:
 ```
 
 ### 5. Update Dashboard Configuration
-Before deploying the bundle, run the Python script to update the dashboard query parameters for the target environment. The target name is provided as an argument (dev, prod, etc.):
+Before deploying the bundle, run the Python script to update the dashboard query parameters for the target environment. The target name and CLI profile are required arguments:
 
 ```bash
 $ cd src
-$ python replace_dashboard_vars.py dev
+$ python replace_dashboard_vars.py --target dev --cli_profile DEFAULT
 ```
 
 This script:
