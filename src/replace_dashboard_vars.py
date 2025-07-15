@@ -7,16 +7,16 @@ import os
 # Add parser for command line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("--target", help="DAB target name (dev, prod, etc.)", required=True)
-parser.add_argument("--cli_profile", help="CLI profile to use", required=True)
+parser.add_argument("--profile", help="CLI profile to use", required=True)
 
 args = parser.parse_args()
 
-def get_dab_vars(target:str, cli_profile:str):
+def get_dab_vars(target:str, profile:str):
     # Get parent directory, which is where we need to run the Databricks CLI
     current_dir = os.getcwd()
     parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
     
-    command = ["databricks", "bundle", "validate", "--output", "json", "-t", target, "-p", cli_profile]
+    command = ["databricks", "bundle", "validate", "-o", "json", "-t", target, "-p", profile]
     
     # Run the shell command and capture the output
     result = subprocess.run(command, cwd=parent_dir, capture_output=True, text=True, check=True)
@@ -30,7 +30,7 @@ def get_dab_vars(target:str, cli_profile:str):
     return data['variables']
 
 # Get catalog and schema from the appropriate target
-dab_vars = get_dab_vars(args.target, args.cli_profile)
+dab_vars = get_dab_vars(args.target, args.profile)
 catalog = dab_vars['catalog']['value']
 schema = dab_vars['schema']['value']
 
