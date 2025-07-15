@@ -31,38 +31,39 @@ $ pip install PyYAML
 ```
 
 ### 4. Configure databricks.yml Variables
-Update the variables in `databricks.yml` to match your environment:
+Update the variables in `databricks.yml` to match your environment. The dev target defaults to catalog `users` and a schema based on on the developer's name.
 
 - **catalog**: The catalog name where your tables will be created
 - **schema**: The schema name within the catalog
-- **warehouse_id**: ID of your SQL warehouse for production deployment. For development, the bundle will attempt to find a warehouse named "Shared Serverless".
+- **warehouse_id**: ID of your SQL warehouse for production deployment. For development, the bundle will lookup the ID based on the specified name (Eg, Shared Serverless).
 - **workspace.host**: Your Databricks workspace URL
 
 Example configuration for dev target:
 ```yaml
 targets:
-  dev:
+  prod:
     mode: development
     default: true
     workspace:
       host: https://your-workspace.cloud.databricks.com
     variables:
+      warehouse_id: your_warehouse_id
       catalog: your_catalog
       schema: your_schema
 ```
 
 ### 5. Update Dashboard Configuration
-Before deploying the bundle, run the Python script to update the dashboard configuration with your specific catalog and schema:
+Before deploying the bundle, run the Python script to update the dashboard query parameters for the target environment. The target name is provided as an argument (dev, prod, etc.):
 
 ```bash
 $ cd src
-$ python replace_dashboard_vars.py
+$ python replace_dashboard_vars.py dev
 ```
 
 This script:
-- Reads your `databricks.yml` configuration
+- Resolves DAB variables for the specified target
 - Updates the existing dashboard file (`dbsql_metrics.lvdash.json`)
-- Replaces the catalog and schema parameter values with your actual values from the databricks.yml file
+- Replaces the catalog and schema parameter values
 - Preserves all other dashboard configuration settings
 
 ## Deployment

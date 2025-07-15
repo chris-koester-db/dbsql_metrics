@@ -1,23 +1,39 @@
 import json
 import yaml
+import argparse
+import subprocess
 import os
 
-# Read the databricks.yml file to get catalog and schema
-databricks_yml_path = "../databricks.yml"
+# Add parser for command line arguments
+parser = argparse.ArgumentParser()
+parser.add_argument("target", help="DAB target name (dev, prod, etc.)")
 
-with open(databricks_yml_path, 'r') as f:
-    databricks_config = yaml.safe_load(f)
+args = parser.parse_args()
 
-# Determine the target environment (default to 'dev' if not specified)
-# You can modify this logic based on how you determine the environment
-target_env = "dev"  # Change this to "prod" for production environment
+def get_dab_vars(target:str):
+    # Get parent directory, which is where we need to run the Databricks CLI
+    current_dir = os.getcwd()
+    parent_dir = os.path.abspath(os.path.join(current_dir, os.pardir))
+    
+    command = ["databricks", "bundle", "validate", "--output", "json", "-t", target]
+    
+    # Run the shell command and capture the output
+    result = subprocess.run(command, cwd=parent_dir, capture_output=True, text=True, check=True)
+    
+    # Remove any whitespace
+    json_output = result.stdout.strip()
+    
+    # Deserialize the JSON string to a Python object
+    data = json.loads(json_output)
+
+    return data['variables']
 
 # Get catalog and schema from the appropriate target
-target_config = databricks_config['targets'][target_env]
-catalog = target_config['variables']['catalog']
-schema = target_config['variables']['schema']
+dab_vars = get_dab_vars(args.target)
+catalog = dab_vars['catalog']['value']
+schema = dab_vars['schema']['value']
 
-print(f"Using target environment: {target_env}")
+print(f"Using target environment: {args.target}")
 print(f"Using catalog: {catalog}")
 print(f"Using schema: {schema}")
 
