@@ -57,7 +57,7 @@ Before deploying the bundle, run the Python script to update the dashboard query
 
 ```bash
 $ cd src
-$ python replace_dashboard_vars.py --target dev --cli_profile DEFAULT
+$ python replace_dashboard_vars.py --target dev --profile DEFAULT
 ```
 
 This script:
