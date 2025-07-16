@@ -38,10 +38,10 @@ targets:
     workspace:
       host: https://e2-demo-field-eng.cloud.databricks.com
       # We explicitly deploy to /Workspace/Users/chris.koester@databricks.com to make sure we only have a single copy.
-      root_path: /Workspace/Users/chris.koester@databricks.com/.bundle/${bundle.name}/${bundle.target}
+      root_path: /Workspace/${bundle.name}
     variables:
       warehouse_id: 4b9b953939869799
-      catalog: users
+      catalog: dbsql_metrics
       schema: default
     permissions:
       - user_name: chris.koester@databricks.com

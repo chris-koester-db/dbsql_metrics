@@ -10,7 +10,7 @@
         "  measure(query_count) as query_count,\n",
         "  measure(distinct_users) as distinct_users\n",
         "from\n",
-        "  users.chris_koester.metv_dbsql\n",
+        "  identifier(:catalog || '.' || :schema || '.metv_dbsql')\n",
         "where date between :param_date.min and :param_date.max\n",
         "group by grouping sets ((date), (date, client_application))"
       ],
@@ -24,11 +24,41 @@
             "range": {
               "dataType": "DATE",
               "min": {
-                "value": "now-7d/d"
+                "value": "now-28d/d"
               },
               "max": {
                 "value": "now/d"
               }
+            }
+          }
+        },
+        {
+          "displayName": "catalog",
+          "keyword": "catalog",
+          "dataType": "STRING",
+          "defaultSelection": {
+            "values": {
+              "dataType": "STRING",
+              "values": [
+                {
+                  "value": "users"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "displayName": "schema",
+          "keyword": "schema",
+          "dataType": "STRING",
+          "defaultSelection": {
+            "values": {
+              "dataType": "STRING",
+              "values": [
+                {
+                  "value": "anhhoang_chu"
+                }
+              ]
             }
           }
         }
