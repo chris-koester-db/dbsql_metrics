@@ -1,6 +1,6 @@
-# dbsql_metrics
+# DBSQL Metrics
 
-The 'dbsql_metrics' project demonstrates how to use [**Databricks Asset Bundles**](https://docs.databricks.com/aws/en/dev-tools/bundles/) with [**Unity Catalog Metric Views**](https://docs.databricks.com/aws/en/metric-views/) to create a end-to-end analytics solution on Databricks. This project showcases best practices for organizing, deploying, and managing Databricks SQL resources using the modern Asset Bundle framework for data warehouse workload.
+The DBSQL Metrics project demonstrates how to use [**Databricks Asset Bundles**](https://docs.databricks.com/aws/en/dev-tools/bundles/) with [**Unity Catalog Metric Views**](https://docs.databricks.com/aws/en/metric-views/) to create a end-to-end analytics solution on Databricks. This project showcases best practices for organizing, deploying, and managing Databricks SQL resources using the modern Asset Bundle framework for data warehouse workload.
 
 
 ## Prerequisites
