@@ -37,7 +37,7 @@ targets:
     mode: production
     workspace:
       host: https://e2-demo-field-eng.cloud.databricks.com
-      # We explicitly deploy to /Workspace/Users/chris.koester@databricks.com to make sure we only have a single copy.
+      # Deploy to a fixed location in production
       root_path: /Workspace/${bundle.name}
     variables:
       warehouse_id: 4b9b953939869799
