@@ -6,12 +6,19 @@
       "queryLines": [
         "select\n",
         "  date,\n",
+        "  workspace_name,\n",
         "  client_application,\n",
+        "  compute_type,\n",
+        "  warehouse_name,\n",
+        "  warehouse_type,\n",
+        "  warehouse_size,\n",
         "  measure(query_count) as query_count,\n",
-        "  measure(distinct_users) as distinct_users\n",
+        "  measure(distinct_users) as distinct_users,\n",
+        "  measure(query_duration_hrs_sum) as query_duration_hrs_sum\n",
         "from\n",
         "  identifier(:catalog || '.' || :schema || '.metv_dbsql')\n",
-        "where date between :param_date.min and :param_date.max\n",
+        "where compute_type = 'Warehouse'\n",
+        "and date between :param_date.min and :param_date.max\n",
         "group by all"
       ],
       "parameters": [
@@ -124,6 +131,9 @@
                   "fieldName": "sum(query_count)",
                   "scale": {
                     "type": "quantitative"
+                  },
+                  "axis": {
+                    "hideLabels": true
                   },
                   "displayName": "Query Count"
                 }
@@ -327,6 +337,357 @@
                   "datasetName": "temp_dataset_name",
                   "fields": [
                     {
+                      "name": "workspace_name",
+                      "expression": "`workspace_name`"
+                    },
+                    {
+                      "name": "sum(query_count)",
+                      "expression": "SUM(`query_count`)"
+                    },
+                    {
+                      "name": "sum(distinct_users)",
+                      "expression": "SUM(`distinct_users`)"
+                    },
+                    {
+                      "name": "sum(query_duration_hrs_sum)",
+                      "expression": "SUM(`query_duration_hrs_sum`)"
+                    }
+                  ],
+                  "cubeGroupingSets": {
+                    "sets": [
+                      {
+                        "fieldNames": [
+                          "workspace_name"
+                        ]
+                      },
+                      {}
+                    ]
+                  },
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "ASC",
+                      "expression": "`workspace_name`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pivot",
+              "encodings": {
+                "rows": [
+                  {
+                    "fieldName": "workspace_name",
+                    "scale": {
+                      "type": "categorical",
+                      "sort": {
+                        "by": "cell-reversed",
+                        "field": {
+                          "index": 0
+                        }
+                      }
+                    },
+                    "displayName": "workspace_name"
+                  }
+                ],
+                "cell": {
+                  "type": "multi-cell",
+                  "fields": [
+                    {
+                      "fieldName": "sum(query_count)",
+                      "cellType": "text",
+                      "format": {
+                        "type": "number-plain",
+                        "abbreviation": "none",
+                        "decimalPlaces": {
+                          "type": "exact",
+                          "places": 0
+                        },
+                        "hideGroupSeparator": false
+                      },
+                      "displayName": "Query Count"
+                    },
+                    {
+                      "fieldName": "sum(distinct_users)",
+                      "cellType": "text",
+                      "format": {
+                        "type": "number-plain",
+                        "abbreviation": "none",
+                        "decimalPlaces": {
+                          "type": "exact",
+                          "places": 0
+                        },
+                        "hideGroupSeparator": false
+                      },
+                      "displayName": "Distinct Users"
+                    },
+                    {
+                      "fieldName": "sum(query_duration_hrs_sum)",
+                      "cellType": "text",
+                      "format": {
+                        "type": "number-plain",
+                        "abbreviation": "none",
+                        "decimalPlaces": {
+                          "type": "exact",
+                          "places": 2
+                        },
+                        "hideGroupSeparator": false
+                      },
+                      "displayName": "Query Duration Hrs"
+                    }
+                  ],
+                  "displayAs": "columns"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 0,
+            "y": 14,
+            "width": 2,
+            "height": 3
+          }
+        },
+        {
+          "widget": {
+            "name": "a1233002",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "temp_dataset_name",
+                  "fields": [
+                    {
+                      "name": "warehouse_name",
+                      "expression": "`warehouse_name`"
+                    },
+                    {
+                      "name": "sum(query_count)",
+                      "expression": "SUM(`query_count`)"
+                    },
+                    {
+                      "name": "sum(distinct_users)",
+                      "expression": "SUM(`distinct_users`)"
+                    },
+                    {
+                      "name": "sum(query_duration_hrs_sum)",
+                      "expression": "SUM(`query_duration_hrs_sum`)"
+                    }
+                  ],
+                  "cubeGroupingSets": {
+                    "sets": [
+                      {
+                        "fieldNames": [
+                          "warehouse_name"
+                        ]
+                      },
+                      {}
+                    ]
+                  },
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "ASC",
+                      "expression": "`warehouse_name`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pivot",
+              "encodings": {
+                "rows": [
+                  {
+                    "fieldName": "warehouse_name",
+                    "scale": {
+                      "type": "categorical",
+                      "sort": {
+                        "by": "cell-reversed",
+                        "field": {
+                          "index": 0
+                        }
+                      }
+                    },
+                    "displayName": "Warehouse Name"
+                  }
+                ],
+                "cell": {
+                  "type": "multi-cell",
+                  "fields": [
+                    {
+                      "fieldName": "sum(query_count)",
+                      "cellType": "text",
+                      "format": {
+                        "type": "number-plain",
+                        "abbreviation": "none",
+                        "decimalPlaces": {
+                          "type": "exact",
+                          "places": 0
+                        },
+                        "hideGroupSeparator": false
+                      },
+                      "displayName": "Query Count"
+                    },
+                    {
+                      "fieldName": "sum(distinct_users)",
+                      "cellType": "text",
+                      "format": {
+                        "type": "number-plain",
+                        "abbreviation": "none",
+                        "decimalPlaces": {
+                          "type": "exact",
+                          "places": 0
+                        },
+                        "hideGroupSeparator": false
+                      },
+                      "displayName": "Distinct Users"
+                    },
+                    {
+                      "fieldName": "sum(query_duration_hrs_sum)",
+                      "cellType": "text",
+                      "displayName": "Query Duration Hrs"
+                    }
+                  ],
+                  "displayAs": "columns"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 2,
+            "y": 8,
+            "width": 2,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "e7f346c5",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "temp_dataset_name",
+                  "fields": [
+                    {
+                      "name": "warehouse_size",
+                      "expression": "`warehouse_size`"
+                    },
+                    {
+                      "name": "sum(query_count)",
+                      "expression": "SUM(`query_count`)"
+                    },
+                    {
+                      "name": "sum(distinct_users)",
+                      "expression": "SUM(`distinct_users`)"
+                    },
+                    {
+                      "name": "sum(query_duration_hrs_sum)",
+                      "expression": "SUM(`query_duration_hrs_sum`)"
+                    }
+                  ],
+                  "cubeGroupingSets": {
+                    "sets": [
+                      {
+                        "fieldNames": [
+                          "warehouse_size"
+                        ]
+                      },
+                      {}
+                    ]
+                  },
+                  "disaggregated": false,
+                  "orders": [
+                    {
+                      "direction": "ASC",
+                      "expression": "`warehouse_size`"
+                    }
+                  ]
+                }
+              }
+            ],
+            "spec": {
+              "version": 3,
+              "widgetType": "pivot",
+              "encodings": {
+                "rows": [
+                  {
+                    "fieldName": "warehouse_size",
+                    "scale": {
+                      "type": "categorical",
+                      "sort": {
+                        "by": "cell-reversed",
+                        "field": {
+                          "index": 0
+                        }
+                      }
+                    },
+                    "displayName": "Warehouse Size"
+                  }
+                ],
+                "cell": {
+                  "type": "multi-cell",
+                  "fields": [
+                    {
+                      "fieldName": "sum(query_count)",
+                      "cellType": "text",
+                      "format": {
+                        "type": "number-plain",
+                        "abbreviation": "none",
+                        "decimalPlaces": {
+                          "type": "exact",
+                          "places": 0
+                        },
+                        "hideGroupSeparator": false
+                      },
+                      "displayName": "Query Count"
+                    },
+                    {
+                      "fieldName": "sum(distinct_users)",
+                      "cellType": "text",
+                      "format": {
+                        "type": "number-plain",
+                        "abbreviation": "none",
+                        "decimalPlaces": {
+                          "type": "exact",
+                          "places": 0
+                        },
+                        "hideGroupSeparator": false
+                      },
+                      "displayName": "Distinct Users"
+                    },
+                    {
+                      "fieldName": "sum(query_duration_hrs_sum)",
+                      "cellType": "text",
+                      "displayName": "Query Duration Hrs"
+                    }
+                  ],
+                  "displayAs": "columns"
+                }
+              }
+            }
+          },
+          "position": {
+            "x": 4,
+            "y": 8,
+            "width": 2,
+            "height": 6
+          }
+        },
+        {
+          "widget": {
+            "name": "f4e8d2be",
+            "queries": [
+              {
+                "name": "main_query",
+                "query": {
+                  "datasetName": "temp_dataset_name",
+                  "fields": [
+                    {
                       "name": "client_application",
                       "expression": "`client_application`"
                     },
@@ -337,6 +698,10 @@
                     {
                       "name": "sum(distinct_users)",
                       "expression": "SUM(`distinct_users`)"
+                    },
+                    {
+                      "name": "sum(query_duration_hrs_sum)",
+                      "expression": "SUM(`query_duration_hrs_sum`)"
                     }
                   ],
                   "cubeGroupingSets": {
@@ -408,6 +773,20 @@
                         "hideGroupSeparator": false
                       },
                       "displayName": "Distinct Users"
+                    },
+                    {
+                      "fieldName": "sum(query_duration_hrs_sum)",
+                      "cellType": "text",
+                      "format": {
+                        "type": "number-plain",
+                        "abbreviation": "none",
+                        "decimalPlaces": {
+                          "type": "exact",
+                          "places": 2
+                        },
+                        "hideGroupSeparator": false
+                      },
+                      "displayName": "Query Duration Hrs"
                     }
                   ],
                   "displayAs": "columns"
@@ -418,8 +797,8 @@
           "position": {
             "x": 0,
             "y": 8,
-            "width": 3,
-            "height": 8
+            "width": 2,
+            "height": 6
           }
         }
       ],
