@@ -31,7 +31,7 @@
               "dataType": "STRING",
               "values": [
                 {
-                  "value": "users"
+                  "value": "dbsql_metrics"
                 }
               ]
             }
@@ -46,7 +46,7 @@
               "dataType": "STRING",
               "values": [
                 {
-                  "value": "chris_koester"
+                  "value": "default"
                 }
               ]
             }
