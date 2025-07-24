@@ -83,8 +83,8 @@ $ source venv/bin/activate
 # On Windows:
 $ venv\Scripts\activate
 
-# Install required Python packages
-$ pip install PyYAML
+# Install required Python packages (n/a currently)
+# $ pip install -r requirements-dev.txt
 ```
 
 ### 4. Configure databricks.yml Variables
@@ -95,7 +95,7 @@ Update the variables in `databricks.yml` to match your environment. The dev targ
 - **warehouse_id**: ID of your SQL warehouse for production deployment. For development, the bundle will lookup the ID based on the specified name (Eg, Shared Serverless).
 - **workspace.host**: Your Databricks workspace URL
 
-Example configuration for dev target:
+Example configuration for prod target:
 ```yaml
 targets:
   prod:
