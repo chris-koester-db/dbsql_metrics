@@ -15,7 +15,7 @@ resources:
 
       # email_notifications:
       #   on_failure:
-      #     - chris.koester@databricks.com
+      #     - your_email
 
       parameters:
         - name: catalog
@@ -31,9 +31,21 @@ resources:
             notebook_path: ../src/dim_calendar.ipynb
             source: WORKSPACE
             warehouse_id: ${var.warehouse_id}
+        - task_key: dim_compute
+          notebook_task:
+            notebook_path: ../src/dim_compute.ipynb
+            source: WORKSPACE
+            warehouse_id: ${var.warehouse_id}
+        - task_key: dim_workspace
+          notebook_task:
+            notebook_path: ../src/dim_workspace.ipynb
+            source: WORKSPACE
+            warehouse_id: ${var.warehouse_id}
         - task_key: fct_query_history
           depends_on:
             - task_key: dim_calendar
+            - task_key: dim_compute
+            - task_key: dim_workspace
           notebook_task:
             notebook_path: ../src/fct_query_history.ipynb
             source: WORKSPACE

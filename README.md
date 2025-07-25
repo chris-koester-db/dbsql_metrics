@@ -9,8 +9,65 @@ The DBSQL Metrics project demonstrates how to use [**Databricks Asset Bundles**]
 Install the Databricks CLI from https://docs.databricks.com/dev-tools/cli/install.html
 
 ### 2. Authenticate to your Databricks workspace
+Choose one of the following authentication methods:
+
+#### Option A: Personal Access Token (PAT)
+
+1. **Generate Personal Access Token:**
+   - Log into your Databricks workspace
+   - Click on your username in the top-right corner
+   - Select **User Settings** → **Developer** → **Access tokens**
+   - Click **Generate new token**
+   - Give it a name (e.g., "Local Development") and set expiration
+   - Copy the generated token
+
+2. **Configure CLI with PAT:**
+   ```bash
+   databricks configure --token --profile DEFAULT
+   ```
+   
+   You'll be prompted for:
+   - **Databricks Host**: `https://your-workspace.cloud.databricks.com`
+   - **Token**: Paste your generated token
+
+    This will update DEFAULT profile in `~/.databrickscfg` 
+
+#### Option B: OAuth Authentication
+
+Configure OAuth:
+
 ```bash
-$ databricks configure
+databricks auth login --host https://your-workspace.cloud.databricks.com --profile PROD
+```
+
+This will:
+- Open your browser for authentication
+- Create a profile in `~/.databrickscfg`
+- Store OAuth credentials securely
+
+#### Verify Configuration
+
+Check your configuration:
+
+```bash
+# List all profiles
+cat ~/.databrickscfg
+```
+
+Your `~/.databrickscfg` should look like:
+
+```ini
+[DEFAULT]
+host = https://your-workspace.cloud.databricks.com
+token = dapi123abc...
+
+[DEV]
+host = https://dev-workspace.cloud.databricks.com
+token = dapi456def...
+
+[PROD]
+host = https://prod-workspace.cloud.databricks.com
+token = databricks-cli
 ```
 
 ### 3. Set up Python Virtual Environment
@@ -26,8 +83,8 @@ $ source venv/bin/activate
 # On Windows:
 $ venv\Scripts\activate
 
-# Install required Python packages
-$ pip install PyYAML
+# Install required Python packages (n/a currently)
+# $ pip install -r requirements-dev.txt
 ```
 
 ### 4. Configure databricks.yml Variables
@@ -38,7 +95,7 @@ Update the variables in `databricks.yml` to match your environment. The dev targ
 - **warehouse_id**: ID of your SQL warehouse for production deployment. For development, the bundle will lookup the ID based on the specified name (Eg, Shared Serverless).
 - **workspace.host**: Your Databricks workspace URL
 
-Example configuration for dev target:
+Example configuration for prod target:
 ```yaml
 targets:
   prod:
@@ -53,11 +110,14 @@ targets:
 ```
 
 ### 5. Update Dashboard Configuration
-Before deploying the bundle, run the Python script to update the dashboard query parameters for the target environment. The target name and CLI profile are required arguments:
+Before deploying the bundle, in the base folder, run the Python script to update the dashboard query parameters for the target environment. The target name and CLI profile are required arguments:
 
 ```bash
-$ cd src
-$ python replace_dashboard_vars.py --target dev --profile DEFAULT
+$ python src/replace_dashboard_vars.py --target dev --profile DEFAULT
+
+# OR for PROD
+
+$ python src/replace_dashboard_vars.py --target PROD --profile PROD
 ```
 
 This script:
@@ -70,9 +130,9 @@ This script:
 
 ### Deploy to Development Environment
 ```bash
-$ databricks bundle deploy --target dev
+$ databricks bundle deploy --target dev --profile DEFAULT
 ```
-(Note that "dev" is the default target, so the `--target` parameter is optional here.)
+Note: Since "dev" is specified as the default target in databricks.yml, you can omit the `--target dev` parameter. Similarly, `--profile DEFAULT` can be omitted if you only have one profile configured for your workspace.
 
 This deploys everything that's defined for this project, including:
 - A job called `[dev yourname] dbsql_metrics_job`
@@ -83,12 +143,12 @@ You can find the deployed job by opening your workspace and clicking on **Workfl
 
 ### Deploy to Production Environment
 ```bash
-$ databricks bundle deploy --target prod
+$ databricks bundle deploy --target prod --profile PROD
 ```
 
 ### Run a Job
 ```bash
-$ databricks bundle run
+$ databricks bundle run --target prod --profile PROD
 ```
 
 ## Development Tools
