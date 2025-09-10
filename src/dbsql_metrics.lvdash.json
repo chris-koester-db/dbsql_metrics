@@ -42,7 +42,7 @@
               "dataType": "STRING",
               "values": [
                 {
-                  "value": "anhhoang_chu"
+                  "value": "chris_koester"
                 }
               ]
             }
@@ -88,7 +88,7 @@
       "displayName": "param_warehouses",
       "queryLines": [
         " select distinct warehouse_name as `Warehouse Name`\n",
-        " from identifier(:catalog || '.' || :schema || '.vw_dim_warehouse')\n",
+        " from identifier(:catalog || '.' || :schema || '.dim_warehouse')\n",
         " \n",
         " union all\n",
         " \n",
@@ -119,7 +119,7 @@
               "dataType": "STRING",
               "values": [
                 {
-                  "value": "anhhoang_chu"
+                  "value": "chris_koester"
                 }
               ]
             }
@@ -167,7 +167,7 @@
               "dataType": "STRING",
               "values": [
                 {
-                  "value": "anhhoang_chu"
+                  "value": "chris_koester"
                 }
               ]
             }
