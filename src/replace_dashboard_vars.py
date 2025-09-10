@@ -10,7 +10,8 @@ Usage:
 Note: Use relative paths (e.g., 'resources/synced_delta_tables.yml') not absolute paths (e.g., '/resources/synced_delta_tables.yml')
 """
 
-
+import os
+import sys
 import json
 import argparse
 import subprocess
