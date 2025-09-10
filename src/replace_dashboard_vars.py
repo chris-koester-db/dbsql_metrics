@@ -14,8 +14,6 @@ Note: Use relative paths (e.g., 'resources/synced_delta_tables.yml') not absolut
 import json
 import argparse
 import subprocess
-import os
-import sys
 
 def parse_arguments():
     """Parse command line arguments."""
