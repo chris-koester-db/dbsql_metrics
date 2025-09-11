@@ -489,7 +489,7 @@
             "name": "8b851219",
             "queries": [
               {
-                "name": "dashboards/01f058247872140182c30b5ac2008695/datasets/01f0787ef67c16b091ec1bbdd7a8f1a8_Warehouse Name",
+                "name": "dashboards/01f058247872140182c30b5ac2008695/datasets/01f08e976bce167385c96bbc3cec3acb_Warehouse Name",
                 "query": {
                   "datasetName": "b1c884db",
                   "fields": [
@@ -506,7 +506,7 @@
                 }
               },
               {
-                "name": "parameter_dashboards/01f058247872140182c30b5ac2008695/datasets/01f078793c3a185b891e1b439995e72f_warehouse_name",
+                "name": "parameter_dashboards/01f058247872140182c30b5ac2008695/datasets/01f08e976bce160c87a475bcb5783c0f_warehouse_name",
                 "query": {
                   "datasetName": "2d419c4e",
                   "parameters": [
@@ -521,23 +521,23 @@
             ],
             "spec": {
               "version": 2,
-              "widgetType": "filter-multi-select",
+              "widgetType": "filter-single-select",
               "encodings": {
                 "fields": [
                   {
                     "fieldName": "Warehouse Name",
                     "displayName": "Warehouse Name",
-                    "queryName": "dashboards/01f058247872140182c30b5ac2008695/datasets/01f0787ef67c16b091ec1bbdd7a8f1a8_Warehouse Name"
+                    "queryName": "dashboards/01f058247872140182c30b5ac2008695/datasets/01f08e976bce167385c96bbc3cec3acb_Warehouse Name"
                   },
                   {
                     "parameterName": "warehouse_name",
-                    "queryName": "parameter_dashboards/01f058247872140182c30b5ac2008695/datasets/01f078793c3a185b891e1b439995e72f_warehouse_name"
+                    "queryName": "parameter_dashboards/01f058247872140182c30b5ac2008695/datasets/01f08e976bce160c87a475bcb5783c0f_warehouse_name"
                   }
                 ]
               },
               "frame": {
                 "showTitle": true,
-                "title": "Warehouse (Exclude 'All' in multi-select)"
+                "title": "Warehouse"
               }
             }
           },
