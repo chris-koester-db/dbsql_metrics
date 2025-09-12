@@ -50,16 +50,33 @@ resources:
             notebook_path: ../src/fct_query_history.ipynb
             source: WORKSPACE
             warehouse_id: ${var.warehouse_id}
-        - task_key: metv_dbsql
+        - task_key: fct_usage
+          depends_on:
+            - task_key: dim_calendar
+            - task_key: dim_compute
+            - task_key: dim_workspace
+          notebook_task:
+            notebook_path: ../src/fct_usage.ipynb
+            source: WORKSPACE
+            warehouse_id: ${var.warehouse_id}
+        - task_key: metv_query_history
           depends_on:
             - task_key: fct_query_history
           notebook_task:
-            notebook_path: ../src/metv_dbsql.ipynb
+            notebook_path: ../src/metv_query_history.ipynb
+            source: WORKSPACE
+            warehouse_id: ${var.warehouse_id}
+        - task_key: metv_usage
+          depends_on:
+            - task_key: fct_usage
+          notebook_task:
+            notebook_path: ../src/metv_usage.ipynb
             source: WORKSPACE
             warehouse_id: ${var.warehouse_id}
         - task_key: refresh_dashboard
           depends_on:
-            - task_key: metv_dbsql
+            - task_key: metv_query_history
+            - task_key: metv_usage
           dashboard_task:
             subscription: {}
             warehouse_id: ${var.warehouse_id}

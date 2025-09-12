@@ -30,7 +30,7 @@ targets:
     variables:
       warehouse_id:
         lookup:
-          warehouse: "Shared Serverless"
+          warehouse: "Shared Unity Catalog Serverless"
       catalog: users
       schema: ${workspace.current_user.short_name}
 

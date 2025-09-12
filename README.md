@@ -117,7 +117,7 @@ $ python src/replace_dashboard_vars.py --target dev --profile DEFAULT
 
 # OR for PROD
 
-$ python src/replace_dashboard_vars.py --target PROD --profile PROD
+$ python src/replace_dashboard_vars.py --target prod --profile PROD
 ```
 
 This script:
